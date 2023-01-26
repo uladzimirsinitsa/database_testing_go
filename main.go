@@ -1,6 +1,7 @@
 package main
 
 import (
+	"github.com/joho/godotenv"
 	"bufio"
 	"encoding/json"
 	"log"
@@ -8,7 +9,6 @@ import (
 	"time"
 	"net/http"
 	"bytes"
-	"github.com/joho/godotenv"
 )
 
 type Stack []string
@@ -32,10 +32,10 @@ func (urls *Stack) IsEmpty() bool {
 
 
 func makeRequest(url string, data []byte) bool {
-	URL, _ := os.LookupEnv("URL")
 	dt := bytes.NewBuffer(data)
 	timeout := time.Duration(6 * time.Second)
 	client := http.Client{Timeout: timeout}
+	URL := os.Getenv("URL")
 	response, err := client.Post(URL, "application/json", dt)
 	if err != nil {
 		log.Println(err)
@@ -58,8 +58,7 @@ func (urls *Stack) Pop() (string, bool) {
 }
 
 func create_stack() Stack {
-	FILE_URLS, _ := os.LookupEnv("FILE_URLS")
-	file, err := os.Open(FILE_URLS)
+	file, err := os.Open("urls.txt")
 	if err != nil{
 		log.Fatalln(err)
 	}
@@ -100,7 +99,7 @@ func thread() {
 
 
 func main() {
-	for i := 0; i < 36; i++	{
+	for i := 0; i < 160; i++	{
 		go thread()
 	}
 	thread()
