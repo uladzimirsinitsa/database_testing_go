@@ -20,16 +20,13 @@ type Data struct {
 	Parsing_data string `json:"parsing_data"`
 }
 
-
 func init() {
 	godotenv.Load()
 }
 
-
 func (urls *Stack) IsEmpty() bool {
 	return len(*urls) == 0
 }
-
 
 func makeRequest(url string, data []byte) bool {
 	dt := bytes.NewBuffer(data)
@@ -45,7 +42,6 @@ func makeRequest(url string, data []byte) bool {
 	return true
 }
 
-
 func (urls *Stack) Pop() (string, bool) {
 	if urls.IsEmpty() {
 		return "", false
@@ -57,7 +53,7 @@ func (urls *Stack) Pop() (string, bool) {
 	}
 }
 
-func create_stack() Stack {
+func createStack() Stack {
 	file, err := os.Open("urls.txt")
 	if err != nil{
 		log.Fatalln(err)
@@ -71,8 +67,7 @@ func create_stack() Stack {
 	return urls
 }
 
-
-func create_json_for_post_request(url string) []byte {
+func createJsonPostRequest(url string) []byte {
 	temp := &Data{
 		Code: 0,
 		Url: url,
@@ -83,8 +78,7 @@ func create_json_for_post_request(url string) []byte {
 	return data
 }
 
-
-var urls = create_stack()
+var urls = createStack()
 
 func thread() {
 	for {
@@ -92,11 +86,10 @@ func thread() {
 		if url == "" {
 			break
 		}
-		data := create_json_for_post_request(url)
+		data := createJsonPostRequest(url)
 		makeRequest(url, data )
 	}
 }
-
 
 func main() {
 	for i := 0; i < 160; i++	{
